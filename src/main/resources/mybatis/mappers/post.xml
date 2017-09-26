@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="post">
+
+	<insert id="createPost" parameterType="postvo">
+		<![CDATA[
+		insert
+		  into post 
+		values (seq_post.nextval,
+				#{title}, 
+				#{content},
+				sysdate,
+				#{category_no})
+	    ]]>
+	</insert>
+	
+	<select id="getPostList" parameterType="String" resultType="postvo">
+		<![CDATA[
+		select rowNum, data.*
+		  from (select no, title, content, reg_date, category_no
+		   		  from post 
+		    	 where category_no in (select no 
+		    	 						 from category 
+		    	 						where id = #{id})
+		 	  order by reg_date desc) data
+		]]>
+	</select>
+
+</mapper>
